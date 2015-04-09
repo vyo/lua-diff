@@ -1,5 +1,5 @@
-sourceDir = "." --copy source path in between quotes
-targetDir = ".git" --copy target path in between quotes
+sourceDir = 'C:\\Users\\manu\\Downloads' --copy source path in between quotes
+targetDir = 'C:\\Users\\manu\\Downloads' --copy target path in between quotes
 
 verbose = true --show full subpaths instead of only filenames
 listMissing = true --show files in source directory that are missing from target directory
@@ -30,7 +30,7 @@ else
 end
 ]]--
 
-local ls = io.popen("dir"..sourceDir.."/b /s")
+local ls = io.popen("dir "..sourceDir.." /b /s")
 
 rawContentsSource = {}
 fileContentsSource = {}
@@ -65,7 +65,7 @@ print("Files found in source directory: "..#rawContentsSource)
 
 print()
 print("Checking against target directory:")
-local ls = io.popen("dir"..targetDir.."/b /s")
+local ls = io.popen("dir "..targetDir.." /b /s")
 
 rawContentsTarget = {}
 fileContentsTarget = {}
