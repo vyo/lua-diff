@@ -1,7 +1,7 @@
 sourceDir = 'C:\\Users\\manu\\Downloads' --copy source path in between quotes
-targetDir = 'C:\\Users\\manu\\Downloads' --copy target path in between quotes
+targetDir = 'C:\\Users\\manu\\Xilinx' --copy target path in between quotes
 
-verbose = true --show full subpaths instead of only filenames
+verbose = false --show full subpaths instead of only filenames
 listMissing = true --show files in source directory that are missing from target directory
 listAdditional = true --show files in target directory that are missing from source directory
 
@@ -41,7 +41,7 @@ else
     print("failed to read")
 end
 
-print("Checking source directory:")
+print("Checking source directory: ("..sourceDir..")")
 print("Analysing raw contents:")
 for _,value in pairs(rawContentsSource) do
     subpath,_ = value:gsub(sourceDir:gsub("[%(%)%.%%%+%-%*%?%[%]%^%$]", "%%%0"), "", 1)--:gsub("\\", "", 1)
@@ -64,7 +64,7 @@ end
 print("Files found in source directory: "..#rawContentsSource)
 
 print()
-print("Checking against target directory:")
+print("Checking against target directory: ("..targetDir..")")
 local ls = io.popen("dir "..targetDir.." /b /s")
 
 rawContentsTarget = {}
