@@ -51,12 +51,13 @@ for _,value in pairs(rawContentsSource) do
 end
 cprint("Done")
 cprint()
-cprint("Listing files:")
-
-for _,value in pairs(fileContentsSource) do
-    cprint(value)
+if verbose == true then
+    cprint("Listing files:")
+    for _,value in pairs(fileContentsSource) do
+        cprint(value)
+    end
+    cprint()
 end
-cprint()
 
 cprint("Files found in source directory: "..#rawContentsSource)
 
@@ -84,12 +85,15 @@ for _,value in pairs(rawContentsTarget) do
 end
 cprint("Done")
 cprint()
-cprint("Listing files:")
+if verbose == true then
+    cprint("Listing files:")
 
-for _,value in pairs(fileContentsSource) do
-    cprint(value)
-end
-cprint()
+    for _,value in pairs(fileContentsSource) do
+        cprint(value)
+    end
+    cprint()
+end 
+
 cprint("Files found in target directory: "..#rawContentsTarget)
 cprint()
 
