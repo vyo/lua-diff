@@ -1,9 +1,22 @@
-sourceDir = 'C:\\Users\\manu\\Downloads' --copy source path in between quotes
-targetDir = 'C:\\Users\\manu\\Xilinx' --copy target path in between quotes
+sourceDir = 'E:\\Games' --copy source path in between quotes
+targetDir = 'E:\\Downloads' --copy target path in between quotes
 
-verbose = false --show full subpaths instead of only filenames
+verbose = true --show verbose output
 listMissing = true --show files in source directory that are missing from target directory
 listAdditional = true --show files in target directory that are missing from source directory
+
+local log = io.open("log.txt", "w")
+
+function cprint(string)
+    if verbose == true then
+       print(string) 
+    end
+    if string ~= nil then
+        log:write(string.."\n")
+    else
+        log:write("\n")
+    end
+end
 
 function mysplit(inputstr, sep)
         if sep == nil then
@@ -16,21 +29,8 @@ function mysplit(inputstr, sep)
         end
         return t
 end
---[[
-local sourceDir = io.popen("echo %cd%")
-if sourceDir then
-    sourceDir = sourceDir:read("*a")
-    sourceDir = sourceDir:gsub("\n", "")
-    print("Source directory:")
-    print(sourceDir)
-    print()
-else
-    print("Could not determine source directory, exiting now.")
-    return
-end
-]]--
 
-local ls = io.popen("dir "..sourceDir.." /b /s")
+local ls = io.popen("dir \""..sourceDir.."\" /b /s")
 
 rawContentsSource = {}
 fileContentsSource = {}
@@ -38,34 +38,31 @@ fileContentsSource = {}
 if ls then
     rawContentsSource = mysplit(ls:read("*a"), "\n")
 else
-    print("failed to read")
+    cprint("failed to read")
 end
 
-print("Checking source directory: ("..sourceDir..")")
-print("Analysing raw contents:")
+cprint("Checking source directory: ("..sourceDir..")")
+cprint("Analysing raw contents:")
 for _,value in pairs(rawContentsSource) do
     subpath,_ = value:gsub(sourceDir:gsub("[%(%)%.%%%+%-%*%?%[%]%^%$]", "%%%0"), "", 1)--:gsub("\\", "", 1)
     filename,_ = subpath:gsub(".*\\", "", 1)
-    if (verbose == true) then
-        print(subpath)
-    end
+    cprint(subpath)
     table.insert(fileContentsSource, filename)
 end
-print("Done")
-print()
-if (verbose == true) then
-print("Listing files:")
+cprint("Done")
+cprint()
+cprint("Listing files:")
 
 for _,value in pairs(fileContentsSource) do
-    print(value)
+    cprint(value)
 end
-print()
-end
-print("Files found in source directory: "..#rawContentsSource)
+cprint()
 
-print()
-print("Checking against target directory: ("..targetDir..")")
-local ls = io.popen("dir "..targetDir.." /b /s")
+cprint("Files found in source directory: "..#rawContentsSource)
+
+cprint()
+cprint("Checking against target directory: ("..targetDir..")")
+local ls = io.popen("dir \""..targetDir.."\" /b /s")
 
 rawContentsTarget = {}
 fileContentsTarget = {}
@@ -75,32 +72,28 @@ additionalContentTarget = {}
 if ls then
     rawContentsTarget = mysplit(ls:read("*a"), "\n")
 else
-    print("failed to read")
+    cprint("failed to read")
 end
 
-print("Analysing raw contents:")
+cprint("Analysing raw contents:")
 for _,value in pairs(rawContentsTarget) do
     subpath,_ = value:gsub(targetDir:gsub("[%(%)%%%+%-%*%?%[%]%^%$]", "%%%0"), "", 1)--:gsub("\\", "", 1)
     filename,_ = subpath:gsub(".*\\", "", 1)
-    if (verbose == true) then
-        print(subpath)
-    end
+    cprint(subpath)
     table.insert(fileContentsTarget, filename)
 end
-print("Done")
-print()
-if (verbose == true) then
-print("Listing files:")
+cprint("Done")
+cprint()
+cprint("Listing files:")
 
 for _,value in pairs(fileContentsSource) do
-    print(value)
+    cprint(value)
 end
-print()
-end
-print("Files found in target directory: "..#rawContentsTarget)
-print()
+cprint()
+cprint("Files found in target directory: "..#rawContentsTarget)
+cprint()
 
-print("Files missing in target directory:")
+cprint("Files missing in target directory:")
 for _,sourceValue in pairs(fileContentsSource) do
     found = false
     for _,targetValue in pairs(fileContentsTarget) do
@@ -111,12 +104,12 @@ for _,sourceValue in pairs(fileContentsSource) do
     end
     if (found == false) then
         table.insert(missingContentTarget, sourceValue)
-        print(sourceValue.."\t\t\t("..rawContentsSource[_]..")")
+        cprint(sourceValue.."\t\t\t("..rawContentsSource[_]..")")
     end
 end
-print()
+cprint()
 
-print("Files missing in source directory:")
+cprint("Files missing in source directory:")
 for _,targetValue in pairs(fileContentsTarget) do
     found = false
     for _,sourceValue in pairs(fileContentsSource) do
@@ -127,7 +120,9 @@ for _,targetValue in pairs(fileContentsTarget) do
     end
     if (found == false) then
         table.insert(additionalContentTarget, targetValue)
-        print(targetValue.."\t\t\t("..rawContentsTarget[_]..")")
+        cprint(targetValue.."\t\t\t("..rawContentsTarget[_]..")")
     end
 end
-print()
+cprint()
+
+log:close()
